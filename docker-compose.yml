@@ -36,8 +36,8 @@ services:
     volumes_from:
       - nginx
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /var/docker-volumes/nginx/certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /var/docker-volumes/nginx/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl
 
   mousehouse:
     image: sfu/mousehouse
