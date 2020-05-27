@@ -1,54 +1,47 @@
-version: '2'
+version: "2"
 
 services:
-  nginx:
-    image: nginx
-    container_name: nginx
+  nginx-proxy:
     restart: always
-    labels: 
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
-      - /var/docker-volumes/nginx/vhost.d:/etc/nginx/vhost.d
-      - /var/docker-volumes/nginx/conf.d:/etc/nginx/conf.d
-      - /var/docker-volumes/nginx/certs:/etc/nginx/certs:ro
-      - /var/docker-volumes/nginx/html:/usr/share/nginx/html
-
-  nginx-gen:
-    image: jwilder/docker-gen
-    container_name: docker-gen
-    restart: always    
-    labels: 
-      - com.github.jrcs.letsencrypt_nginx_proxy_companion.docker_gen
-    command: -notify-sighup nginx -watch /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf
-    volumes_from:
-      - nginx
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock
-      - /var/docker-volumes/nginx/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl:ro
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    network_mode: bridge
 
   letsencrypt-nginx-proxy-companion:
     restart: always
     image: jrcs/letsencrypt-nginx-proxy-companion
-    container_name: letsencrypt-nginx-proxy-companion
+    container_name: nginx-proxy-le
     volumes_from:
-      - nginx
+      - nginx-proxy
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /var/docker-volumes/nginx/nginx.tmpl:/etc/docker-gen/templates/nginx.tmpl
+      - certs:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    network_mode: bridge
 
   mousehouse:
-    image: sfu/mousehouse
+    image: simonfraseruniversity/mousehouse
     restart: always
     container_name: mousehouse
-    env_file:
-      - mousehouse.env
+    environment:
+      - DOCKER_MODE=socket
+      - DOCKER_SOCKET=/var/run/docker.sock
+      - DNS_TTL=300
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-networks:
-  default:
-    external:
-      name: nginxproxy
+volumes:
+  conf:
+  vhost:
+  html:
+  dhparam:
+  certs:
