@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+  mousehouse:
+    environment:
+      - MM_SERVER=mm.yourdomain.com
+      - MM_USERNAME=your-username
+      - MM_PASSWORD=password
+      - CNAME_TO=your-loadbalancer.lcs-dev.its.sfu.ca.
+      - DNS_ZONE_REF={#n-#nnnn}
