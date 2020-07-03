@@ -15,7 +15,8 @@ services:
       - dhparam:/etc/nginx/dhparam
       - certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
-    network_mode: bridge
+    networks:
+      - nginx-proxy
 
   letsencrypt-nginx-proxy-companion:
     restart: always
@@ -26,7 +27,8 @@ services:
     volumes:
       - certs:/etc/nginx/certs:rw
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    network_mode: bridge
+    networks:
+      - nginx-proxy
 
   mousehouse:
     image: simonfraseruniversity/mousehouse
@@ -38,6 +40,8 @@ services:
       - DNS_TTL=300
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - nginx-proxy
 
 volumes:
   conf:
@@ -45,3 +49,7 @@ volumes:
   html:
   dhparam:
   certs:
+
+networks:
+  nginx-proxy:
+    external: true
