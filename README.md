@@ -4,6 +4,7 @@ A simple Docker Compose configuration that orchestrates setting up the tools nec
 
 ## Usage
 
+- Clone this repo somewhere on your VM (e.g. in your home directory) as your user, not root.
 - Copy the docker-comopse.local.yml.example file to docker-compose.local.yml
 - Copy the .env.example file to .env
 - Edit docker-compose.local.yml and set the `mousehouse` environment variables as follows:
