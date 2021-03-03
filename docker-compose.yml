@@ -1,4 +1,4 @@
-version: "2"
+version: '2'
 
 services:
   nginx-proxy:
@@ -6,8 +6,8 @@ services:
     image: jwilder/nginx-proxy
     container_name: nginx-proxy
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     volumes:
       - conf:/etc/nginx/conf.d
       - vhost:/etc/nginx/vhost.d
@@ -29,9 +29,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - nginx-proxy
+    depends_on:
+      - nginx-proxy
 
   mousehouse:
-    image: simonfraseruniversity/mousehouse
+    image: simonfraseruniversity/mousehouse:3.0.0
     restart: always
     container_name: mousehouse
     environment:
@@ -41,6 +43,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
+      - nginx-proxy
+    depends_on:
       - nginx-proxy
 
 volumes:
