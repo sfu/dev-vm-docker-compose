@@ -1,3 +1,7 @@
+# **** THIS REPOSITORY HAS MOVED ****
+
+This repository has moved to SFU GitHub: https://github.sfu.ca/its/dev-vm-docker-compose.
+
 # dev-vm-docker-compose
 
 A simple Docker Compose configuration that orchestrates setting up the tools necessary to use make applications running on a development VM availavle through a public hostname with HTTPS provided by Let's Encrypt.
